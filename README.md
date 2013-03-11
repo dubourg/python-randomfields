@@ -90,3 +90,9 @@ References
   report](http://www.ibk.ethz.ch/su/publications/Reports/SFE-report-Sudret.pdf>)
   University of California, Berkeley, 2000
 
+* Desceliers, C.; Soize, C. & Ghanem, R.
+  [Identification of chaos representations of elastic properties of random media
+  using experimental vibration tests](
+  http://hal.archives-ouvertes.fr/docs/00/68/61/50/PDF/publi-2007-CM-39_6_831-838-desceliers-soize-ghanem-preprint.pdf)
+  Comput. Mech., 2007, 39, 831-838
+
