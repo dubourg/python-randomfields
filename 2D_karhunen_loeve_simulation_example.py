@@ -93,7 +93,7 @@ x1, x2 = np.meshgrid(np.linspace(lower_bound[0], upper_bound[0], res),
                      np.linspace(lower_bound[0], upper_bound[0], res))
 x = np.vstack([x1.ravel(), x2.ravel()]).T
 xi_distribution = ot.Normal(truncation_order)
-xi = xi_distribution.getNumericalSample(n_sample_paths)
+xi = xi_distribution.getSample(n_sample_paths)
 sample_paths_values = random_field(x, xi)
 
 # Plot a sample path

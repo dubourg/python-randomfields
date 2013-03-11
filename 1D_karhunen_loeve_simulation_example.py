@@ -114,7 +114,7 @@ pl.close()
 res = n_index_values
 x = np.linspace(lower_bound[0], upper_bound[0], res)
 xi_theoretical_distribution = ot.Normal(truncation_order)
-xi = xi_theoretical_distribution.getNumericalSample(n_sample_paths)
+xi = xi_theoretical_distribution.getSample(n_sample_paths)
 sample_paths_values = random_field(x[:, np.newaxis], xi)
 
 # Plot a few sample paths
