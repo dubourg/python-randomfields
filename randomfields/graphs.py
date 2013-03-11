@@ -49,7 +49,7 @@ def matrix_plot(X, ot_distribution=None, ot_kernel=None,
     >>> from phimeca.graphs import plot_matrix
     >>> import openturns as ot
     >>> probabilistic_model = ot.Normal(3)
-    >>> sample = probabilistic_model.getNumericalSample(100)
+    >>> sample = probabilistic_model.getSample(100)
     >>> ax = plot_matrix(sample,
                          ot_distribution=X,
                          ot_kernel=[ot.KernelSmoothing(ot.Epanechnikov())] * 3,
