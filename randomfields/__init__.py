@@ -18,3 +18,5 @@ random fields using the Karhunen-Loeve expansion representation.
 
 from .simulation import KarhunenLoeveExpansion
 from .graphs import matrix_plot
+
+__version__ = 0

@@ -196,7 +196,7 @@ class KarhunenLoeveExpansion:
 
         PHI = np.vstack([np.sqrt(self._eigenvalues[k])
                          * self._eigenfunctions[k](x)
-                         for k in xrange(self._truncation_order)])
+                         for k in range(self._truncation_order)])
         sample_paths_values = np.ravel(self._mean(x)) + np.dot(xi, PHI)
 
         return sample_paths_values
@@ -230,10 +230,10 @@ class KarhunenLoeveExpansion:
         x1, x2 = xx[:, :dimension], xx[:, dimension:]
         PHI1 = np.vstack([np.sqrt(self._eigenvalues[k])
                           * self._eigenfunctions[k](x1)
-                          for k in xrange(self._truncation_order)])
+                          for k in range(self._truncation_order)])
         PHI2 = np.vstack([np.sqrt(self._eigenvalues[k])
                           * self._eigenfunctions[k](x2)
-                          for k in xrange(self._truncation_order)])
+                          for k in range(self._truncation_order)])
         covariance_values = inner1d(PHI1.T, PHI2.T)
 
         return covariance_values
@@ -325,7 +325,7 @@ class KarhunenLoeveExpansion:
                 tensorized_legendre_polynomial_factory)
         tensorized_legendre_polynomials = \
             [tensorized_legendre_polynomial_factory.build(i)
-             for i in xrange(galerkin_size)]
+             for i in range(galerkin_size)]
 
         # Compute matrix C coefficients using Gauss-Legendre quadrature
         polyColl = ot.PolynomialFamilyCollection(
@@ -341,7 +341,7 @@ class KarhunenLoeveExpansion:
         X = np.repeat(scale, 2) * U + np.repeat(shift, 2)
 
         if self.verbose:
-            print 'Computing matrix C...'
+            print('Computing matrix C...')
 
         try:
             available_memory = int(.9 * get_available_memory())
@@ -353,10 +353,10 @@ class KarhunenLoeveExpansion:
         max_size = int(available_memory / 8 / galerkin_size ** 2)
         batch_size = min(W.size, max_size)
         if self.verbose and batch_size < W.size:
-            print 'RAM: %d Mb available' % (available_memory / 1024 ** 2)
-            print 'RAM: %d allocable terms / %d total terms' % (max_size,
-                                                                 W.size)
-            print 'RAM: %d loops required' % np.ceil(float(W.size) / max_size)
+            print( 'RAM: %d Mb available' % (available_memory / 1024 ** 2))
+            print( 'RAM: %d allocable terms / %d total terms' % (max_size,
+                                                                 W.size))
+            print( 'RAM: %d loops required' % np.ceil(float(W.size) / max_size))
         while True:
             C = np.zeros((galerkin_size, galerkin_size))
             try:
@@ -367,11 +367,11 @@ class KarhunenLoeveExpansion:
                     H1 = np.vstack([np.ravel(
                         tensorized_legendre_polynomials[i](
                         U[n_done:(n_done + batch_size), :dimension]))
-                        for i in xrange(galerkin_size)])
+                        for i in range(galerkin_size)])
                     H2 = np.vstack([np.ravel(
                         tensorized_legendre_polynomials[i](
                         U[n_done:(n_done + batch_size), dimension:]))
-                        for i in xrange(galerkin_size)])
+                        for i in range(galerkin_size)])
                     C += np.sum(W[np.newaxis, np.newaxis,
                                     n_done:(n_done + batch_size)]
                                 * covariance_at_X[np.newaxis, np.newaxis, :]
@@ -390,7 +390,7 @@ class KarhunenLoeveExpansion:
 
         # Solve the generalized eigenvalue problem C D = L B D in L, D
         if self.verbose:
-            print 'Solving generalized eigenvalue problem...'
+            print( 'Solving generalized eigenvalue problem...')
         eigenvalues, eigenvectors = linalg.eigh(C, b=B, lower=True)
         eigenvalues, eigenvectors = eigenvalues.real, eigenvectors.real
 
@@ -414,8 +414,8 @@ class KarhunenLoeveExpansion:
                 eigenvalues = eigenvalues[:truncation_order]
                 eigenvectors = eigenvectors[:, :truncation_order]
                 self._truncation_order = truncation_order
-                print 'WRN: truncation_order was too large.'
-                print 'It has been reset to: %d' % truncation_order
+                print( 'WRN: truncation_order was too large.')
+                print( 'It has been reset to: %d' % truncation_order )
 
         # Define eigenfunctions
         class LegendrePolynomialsBasedEigenFunction():
@@ -429,7 +429,7 @@ class KarhunenLoeveExpansion:
                 u = (x - shift) / scale
                 return np.sum([np.ravel(tensorized_legendre_polynomials[i](u))
                                 * self._vector[i]
-                                for i in xrange(truncation_order)], axis=0)
+                                for i in range(truncation_order)], axis=0)
 
         # Set attributes
         self._eigenvalues = eigenvalues
@@ -476,10 +476,10 @@ class KarhunenLoeveExpansion:
                        / 8 / truncation_order / n_sample_paths)
         batch_size = min(W.size, max_size)
         if self.verbose and batch_size < W.size:
-            print 'RAM: %d Mb available' % (available_memory / 1024 ** 2)
-            print 'RAM: %d allocable terms / %d total terms' % (max_size,
-                                                                 W.size)
-            print 'RAM: %d loops required' % np.ceil(float(W.size) / max_size)
+            print( 'RAM: %d Mb available' % (available_memory / 1024 ** 2))
+            print( 'RAM: %d allocable terms / %d total terms' % (max_size,
+                                                                 W.size))
+            print( 'RAM: %d loops required' % np.ceil(float(W.size) / max_size))
         while True:
             coefficients = np.zeros((n_sample_paths, truncation_order))
             try:
@@ -487,7 +487,7 @@ class KarhunenLoeveExpansion:
                 while n_done < W.size:
                     sample_paths_values = np.vstack([np.ravel(sample_paths[i](
                         X[n_done:(n_done + batch_size)]))
-                        for i in xrange(n_sample_paths)])
+                        for i in range(n_sample_paths)])
                     mean_values = np.ravel(self._mean(
                         X[n_done:(n_done + batch_size)]))[np.newaxis, :]
                     centered_sample_paths_values = \
@@ -496,7 +496,7 @@ class KarhunenLoeveExpansion:
                     eigenelements_values = np.vstack([self._eigenfunctions[k](
                         X[n_done:(n_done + batch_size)])
                         / np.sqrt(self._eigenvalues[k])
-                        for k in xrange(truncation_order)])
+                        for k in range(truncation_order)])
                     coefficients += np.sum(
                         W[np.newaxis, np.newaxis, n_done:(n_done + batch_size)]
                         * centered_sample_paths_values[:, np.newaxis, :]

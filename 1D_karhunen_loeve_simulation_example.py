@@ -120,7 +120,7 @@ sample_paths_values = random_field(x[:, np.newaxis], xi)
 # Plot a few sample paths
 pl.figure()
 pl.title('A few sample paths')
-for i in xrange(min(n_sample_paths, 10)):
+for i in range(min(n_sample_paths, 10)):
     pl.plot(x, sample_paths_values[i], label='$h^{(%d)}$' % i)
 pl.xlabel('$x$')
 pl.ylabel('$H(x)$')
