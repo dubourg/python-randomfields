@@ -36,12 +36,14 @@ n_index_values = 100
 lower_bound = np.array([0.] * 1)
 upper_bound = np.array([10.] * 1)
 
+
 def mean(x):
     x = np.asanyarray(x)
     if x.ndim <= 1:
         x = np.atleast_2d(x).T
     x = np.atleast_2d(x)
     return np.zeros(x.shape[0])
+
 
 def covariance(xx):
     xx = np.atleast_2d(xx)
@@ -52,15 +54,15 @@ def covariance(xx):
 # Discretization of the random field using Karhunen-Loeve expansion
 # from its given theoretical moments
 random_field = KarhunenLoeveExpansion(
-                        mean,
-                        covariance,
-                        truncation_order,
-                        [lower_bound, upper_bound],
-                        domain_expand_factor=domain_expand_factor,
-                        verbose=verbose,
-                        galerkin_scheme=galerkin_scheme,
-                        legendre_galerkin_order=legendre_galerkin_order,
-                        legendre_quadrature_order=legendre_quadrature_order)
+    mean,
+    covariance,
+    truncation_order,
+    [lower_bound, upper_bound],
+    domain_expand_factor=domain_expand_factor,
+    verbose=verbose,
+    galerkin_scheme=galerkin_scheme,
+    legendre_galerkin_order=legendre_galerkin_order,
+    legendre_quadrature_order=legendre_quadrature_order)
 truncation_order = random_field._truncation_order
 
 # Plot the relative covariance discretization error

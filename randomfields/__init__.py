@@ -14,7 +14,7 @@ random fields using the Karhunen-Loeve expansion representation.
 #         Vincent Dubourg <dubourg@phimeca.com>
 # License: BSD
 #   This module was implemented by Phimeca Engineering SA, EdF and Institut
-#   Navier (ENPC). It is shipped as is without any warranty of any kind. 
+#   Navier (ENPC). It is shipped as is without any warranty of any kind.
 
 from .simulation import KarhunenLoeveExpansion
 from .graphs import matrix_plot

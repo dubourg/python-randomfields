@@ -62,7 +62,7 @@ import pylab as pl
 from scipy.interpolate import interp1d
 import openturns as ot
 from randomfields import KarhunenLoeveExpansion, \
-                         matrix_plot
+    matrix_plot
 
 # Name of the input file that contains the indexing variable and sample paths
 # values
@@ -88,9 +88,11 @@ upper_bound = np.array([10.] * 1)
 sample_paths = [interp1d(x, sample_paths_values[i], kind='linear')
                 for i in xrange(n_sample_paths)]
 
+
 def estimated_mean(x):
     y = np.vstack([sample_paths[i](x) for i in xrange(n_sample_paths)])
     return np.mean(y, axis=0)
+
 
 def estimated_covariance(xx):
     xx = np.atleast_2d(xx)
@@ -105,15 +107,15 @@ def estimated_covariance(xx):
 # Discretization of the random field using Karhunen-Loeve expansion
 # from its estimated theoretical moments
 estimated_random_field = KarhunenLoeveExpansion(
-                        estimated_mean,
-                        estimated_covariance,
-                        truncation_order,
-                        [lower_bound, upper_bound],
-                        domain_expand_factor=1.,
-                        verbose=verbose,
-                        galerkin_scheme=galerkin_scheme,
-                        legendre_galerkin_order=legendre_galerkin_order,
-                        legendre_quadrature_order=legendre_quadrature_order)
+    estimated_mean,
+    estimated_covariance,
+    truncation_order,
+    [lower_bound, upper_bound],
+    domain_expand_factor=1.,
+    verbose=verbose,
+    galerkin_scheme=galerkin_scheme,
+    legendre_galerkin_order=legendre_galerkin_order,
+    legendre_quadrature_order=legendre_quadrature_order)
 truncation_order = estimated_random_field._truncation_order
 
 # Plot eigenvalues and eigenfunctions
@@ -122,7 +124,7 @@ pl.title('Eigensolutions')
 for i in xrange(truncation_order):
     pl.plot(x, estimated_random_field._eigenfunctions[i](x),
             label='$\lambda_{%d} = %.2f$' % (i,
-            estimated_random_field._eigenvalues[i]))
+                                             estimated_random_field._eigenvalues[i]))
 pl.xlabel('$x$')
 pl.ylabel('$\\varphi_i(x)$')
 pl.grid()
@@ -137,16 +139,16 @@ xi = estimated_random_field.compute_coefficients(sample_paths)
 # Statistical inference of the KL coefficients' distribution
 kernel_smoothing = ot.KernelSmoothing(ot.Normal())
 xi_marginal_distributions = ot.DistributionCollection(
-                            [kernel_smoothing.build(xi[:, i][:, np.newaxis])
-                             for i in xrange(truncation_order)])
+    [kernel_smoothing.build(xi[:, i][:, np.newaxis])
+     for i in xrange(truncation_order)])
 try:
     xi_copula = ot.NormalCopulaFactory().build(xi)
 except RuntimeError:
     print('ERR: The normal copula correlation matrix built from the given\n'
-         + 'Spearman correlation matrix is not definite positive.\n'
-         + 'This would require expert judgement on the correlation\n'
-         + 'coefficients significance (using e.g. Spearman test).\n'
-         + 'Assuming an independent copula in the sequel...')
+          + 'Spearman correlation matrix is not definite positive.\n'
+          + 'This would require expert judgement on the correlation\n'
+          + 'coefficients significance (using e.g. Spearman test).\n'
+          + 'Assuming an independent copula in the sequel...')
     xi_copula = ot.IndependentCopula(truncation_order)
 xi_estimated_distribution = ot.ComposedDistribution(xi_marginal_distributions,
                                                     xi_copula)
@@ -155,7 +157,7 @@ xi_estimated_distribution = ot.ComposedDistribution(xi_marginal_distributions,
 matrix_plot(xi, ot_distribution=xi_estimated_distribution,
             labels=[('$\\xi_{%d}$' % i) for i in xrange(truncation_order)])
 pl.suptitle('Karhunen-Loeve coefficients '
-          + '(observations and estimated distribution)')
+            + '(observations and estimated distribution)')
 pl.savefig('1D_identification_KL_coefficients_joint_distribution.png')
 pl.close()
 

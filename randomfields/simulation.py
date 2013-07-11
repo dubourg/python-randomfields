@@ -9,6 +9,7 @@ import openturns as ot
 
 
 class KarhunenLoeveExpansion:
+
     """
     A class that implements the Karhunen-Loeve expansion (KLE) representation
     of second-order random fields with arbitrary mean and covariance functions
@@ -141,9 +142,9 @@ class KarhunenLoeveExpansion:
 
         if galerkin_scheme not in self._implemented_galerkin_schemes:
             raise ValueError('The Galerkin scheme should be selected amongst'
-            + ' the implemented Galerkin schemes: %s.'
-            % self._implemented_galerkin_schemes
-            + ' Got %s instead.' % galerkin_scheme)
+                             + ' the implemented Galerkin schemes: %s.'
+                             % self._implemented_galerkin_schemes
+                             + ' Got %s instead.' % galerkin_scheme)
         else:
             self._galerkin_scheme = galerkin_scheme
 
@@ -187,11 +188,11 @@ class KarhunenLoeveExpansion:
         xi = np.atleast_2d(xi)
         if x.shape[1] != dimension:
             raise ValueError('The number of columns in x must equal the '
-                               + 'dimension of the random field which is %d.'
+                             + 'dimension of the random field which is %d.'
                                % dimension)
         if xi.shape[1] != truncation_order:
             raise ValueError('The number of columns in xi must equal the '
-                               + 'truncation order of the random field which '
+                             + 'truncation order of the random field which '
                                + 'is %d.' % truncation_order)
 
         PHI = np.vstack([np.sqrt(self._eigenvalues[k])
@@ -225,7 +226,7 @@ class KarhunenLoeveExpansion:
         xx = np.atleast_2d(xx)
         if xx.shape[1] != 2 * dimension:
             raise ValueError('The number of columns in xx must be %d.'
-                               % (2 * dimension))
+                             % (2 * dimension))
 
         x1, x2 = xx[:, :dimension], xx[:, dimension:]
         PHI1 = np.vstack([np.sqrt(self._eigenvalues[k])
@@ -274,12 +275,12 @@ class KarhunenLoeveExpansion:
         if not(callable(sample_paths) or
                 hasattr(sample_paths, '__getitem__')):
             raise ValueError('sample_paths must be callable or a '
-            + 'collection of callables.')
+                             + 'collection of callables.')
 
         if hasattr(sample_paths, '__getitem__'):
             if not callable(sample_paths[0]):
                 raise ValueError('sample_paths must be callable or a '
-                + 'collection of callables.')
+                                 + 'collection of callables.')
         else:
             sample_paths = [sample_paths]
 
@@ -294,12 +295,12 @@ class KarhunenLoeveExpansion:
         # Input checks
         if legendre_galerkin_order <= 0:
             raise ValueError('legendre_galerkin_order must be a positive '
-            + 'integer!')
+                             + 'integer!')
 
         if legendre_quadrature_order is not None:
             if legendre_quadrature_order <= 0:
                 raise ValueError('legendre_quadrature_order must be a '
-                + 'positive integer!')
+                                 + 'positive integer!')
 
         # Settings
         dimension = self._lower_bound.size
@@ -312,10 +313,13 @@ class KarhunenLoeveExpansion:
         # Check if the current settings are compatible
         if truncation_order > galerkin_size:
             raise ValueError('The truncation order must be less than or '
-            + 'equal to the size of the functional basis in the chosen '
-            + 'Legendre Galerkin scheme. Current size of the galerkin basis '
-            + 'only allows to get %d terms in the KL expansion.'
-            % galerkin_size)
+                             +
+                             'equal to the size of the functional basis in the chosen '
+                             +
+                             'Legendre Galerkin scheme. Current size of the galerkin basis '
+                             +
+                             'only allows to get %d terms in the KL expansion.'
+                             % galerkin_size)
 
         # Construction of the Galerkin basis: tensorized Legendre polynomials
         tensorized_legendre_polynomial_factory = \
@@ -348,15 +352,15 @@ class KarhunenLoeveExpansion:
         except:
             if self.verbose:
                 print('WRN: Available memory estimation failed! '
-                       'Assuming 1Gb is available (first guess).')
+                      'Assuming 1Gb is available (first guess).')
             available_memory = 1024 ** 3
         max_size = int(available_memory / 8 / galerkin_size ** 2)
         batch_size = min(W.size, max_size)
         if self.verbose and batch_size < W.size:
-            print( 'RAM: %d Mb available' % (available_memory / 1024 ** 2))
-            print( 'RAM: %d allocable terms / %d total terms' % (max_size,
-                                                                 W.size))
-            print( 'RAM: %d loops required' % np.ceil(float(W.size) / max_size))
+            print('RAM: %d Mb available' % (available_memory / 1024 ** 2))
+            print('RAM: %d allocable terms / %d total terms' % (max_size,
+                                                                W.size))
+            print('RAM: %d loops required' % np.ceil(float(W.size) / max_size))
         while True:
             C = np.zeros((galerkin_size, galerkin_size))
             try:
@@ -366,14 +370,14 @@ class KarhunenLoeveExpansion:
                         X[n_done:(n_done + batch_size)])
                     H1 = np.vstack([np.ravel(
                         tensorized_legendre_polynomials[i](
-                        U[n_done:(n_done + batch_size), :dimension]))
+                            U[n_done:(n_done + batch_size), :dimension]))
                         for i in range(galerkin_size)])
                     H2 = np.vstack([np.ravel(
                         tensorized_legendre_polynomials[i](
-                        U[n_done:(n_done + batch_size), dimension:]))
+                            U[n_done:(n_done + batch_size), dimension:]))
                         for i in range(galerkin_size)])
                     C += np.sum(W[np.newaxis, np.newaxis,
-                                    n_done:(n_done + batch_size)]
+                                  n_done:(n_done + batch_size)]
                                 * covariance_at_X[np.newaxis, np.newaxis, :]
                                 * H1[np.newaxis, :, :]
                                 * H2[:, np.newaxis, :], axis=-1)
@@ -390,7 +394,7 @@ class KarhunenLoeveExpansion:
 
         # Solve the generalized eigenvalue problem C D = L B D in L, D
         if self.verbose:
-            print( 'Solving generalized eigenvalue problem...')
+            print('Solving generalized eigenvalue problem...')
         eigenvalues, eigenvectors = linalg.eigh(C, b=B, lower=True)
         eigenvalues, eigenvectors = eigenvalues.real, eigenvectors.real
 
@@ -407,18 +411,20 @@ class KarhunenLoeveExpansion:
         if eigenvalues.min() <= 0.:
             if eigenvalues.min() > .01 * eigenvalues.max():
                 raise Exception('The smallest significant eigenvalue seems '
-                + 'to be negative... Check the positive definiteness of the '
-                + 'covariance function.')
+                                +
+                                'to be negative... Check the positive definiteness of the '
+                                + 'covariance function.')
             else:
                 truncation_order = np.nonzero(eigenvalues <= 0)[0][0]
                 eigenvalues = eigenvalues[:truncation_order]
                 eigenvectors = eigenvectors[:, :truncation_order]
                 self._truncation_order = truncation_order
-                print( 'WRN: truncation_order was too large.')
-                print( 'It has been reset to: %d' % truncation_order )
+                print('WRN: truncation_order was too large.')
+                print('It has been reset to: %d' % truncation_order)
 
         # Define eigenfunctions
         class LegendrePolynomialsBasedEigenFunction():
+
             def __init__(self, vector):
                 self._vector = vector
 
@@ -428,8 +434,8 @@ class KarhunenLoeveExpansion:
                     x = np.atleast_2d(x).T
                 u = (x - shift) / scale
                 return np.sum([np.ravel(tensorized_legendre_polynomials[i](u))
-                                * self._vector[i]
-                                for i in range(truncation_order)], axis=0)
+                               * self._vector[i]
+                               for i in range(truncation_order)], axis=0)
 
         # Set attributes
         self._eigenvalues = eigenvalues
@@ -446,9 +452,9 @@ class KarhunenLoeveExpansion:
         if legendre_quadrature_order is None:
             legendre_quadrature_order = self._legendre_quadrature_order
         elif type(legendre_quadrature_order) is not int \
-            or legendre_quadrature_order <= 0:
+                or legendre_quadrature_order <= 0:
             raise ValueError('legendre_quadrature_order must be a positive '
-            + 'integer.')
+                             + 'integer.')
         n_sample_paths = len(sample_paths)
 
         # Gauss-Legendre quadrature nodes and weights
@@ -470,16 +476,16 @@ class KarhunenLoeveExpansion:
         except:
             if self.verbose:
                 print('WRN: Available memory estimation failed! '
-                       'Assuming 1Gb is available (first guess).')
+                      'Assuming 1Gb is available (first guess).')
             available_memory = 1024 ** 3
         max_size = int(available_memory
                        / 8 / truncation_order / n_sample_paths)
         batch_size = min(W.size, max_size)
         if self.verbose and batch_size < W.size:
-            print( 'RAM: %d Mb available' % (available_memory / 1024 ** 2))
-            print( 'RAM: %d allocable terms / %d total terms' % (max_size,
-                                                                 W.size))
-            print( 'RAM: %d loops required' % np.ceil(float(W.size) / max_size))
+            print('RAM: %d Mb available' % (available_memory / 1024 ** 2))
+            print('RAM: %d allocable terms / %d total terms' % (max_size,
+                                                                W.size))
+            print('RAM: %d loops required' % np.ceil(float(W.size) / max_size))
         while True:
             coefficients = np.zeros((n_sample_paths, truncation_order))
             try:

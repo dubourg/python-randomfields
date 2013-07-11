@@ -66,7 +66,7 @@ def matrix_plot(X, ot_distribution=None, ot_kernel=None,
         ranks = np.zeros_like(X)
         for i in xrange(n_features):
             ranks[:, i] = np.ravel(ot_distribution.getMarginal(i).computeCDF(
-                            np.atleast_2d(X[:, i]).T))
+                np.atleast_2d(X[:, i]).T))
             ranks[:, i] *= n_samples
 
     pl.figure(figsize=(8, 8))
