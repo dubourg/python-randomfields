@@ -22,7 +22,7 @@ Requirements
 
 The present Python module and its examples rely on:
 
-* OpenTURNS (>= 1.1)
+* OpenTURNS (>= 1.4)
 
 * Numpy (>= 1.6)
 
