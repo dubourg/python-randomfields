@@ -335,9 +335,8 @@ class KarhunenLoeveExpansion:
         polyColl = ot.PolynomialFamilyCollection(
             [ot.LegendreFactory()] * dimension * 2)
         polynoms = ot.OrthogonalProductPolynomialFactory(polyColl)
-        W = ot.NumericalPoint(1, 0.)
-        U = polynoms.getNodesAndWeights(
-            ot.Indices([legendre_quadrature_order] * dimension * 2), W)
+        U, W = polynoms.getNodesAndWeights(
+            ot.Indices([legendre_quadrature_order] * dimension * 2))
         W = np.ravel(W)
         scale = (self._upper_bound - self._lower_bound) / 2.
         shift = (self._upper_bound + self._lower_bound) / 2.
@@ -461,9 +460,8 @@ class KarhunenLoeveExpansion:
         polyColl = ot.PolynomialFamilyCollection(
             [ot.LegendreFactory()] * dimension)
         polynoms = ot.OrthogonalProductPolynomialFactory(polyColl)
-        W = ot.NumericalPoint(1, 0.)
-        U = polynoms.getNodesAndWeights(
-            ot.Indices([legendre_quadrature_order] * dimension), W)
+        U, W = polynoms.getNodesAndWeights(
+            ot.Indices([legendre_quadrature_order] * dimension))
         W = np.ravel(W)
         U = np.array(U)
         scale = (self._upper_bound - self._lower_bound) / 2.
